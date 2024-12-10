@@ -27,15 +27,20 @@ fi
 # Set LED file locations
 whiteLedFileLocation="/sys/class/leds/led:torch_0/brightness"  # Path for white LED
 yellowLedFileLocation="/sys/class/leds/led:torch_1/brightness"  # Path for yellow LED
+white2LedFileLocation="/sys/class/leds/led:torch_2/brightness"  # Path for yellow LED
+yellow2LedFileLocation="/sys/class/leds/led:torch_3/brightness"  # Path for yellow LED
 toggleFileLocation="/sys/class/leds/led:switch_0/brightness"  # Optional toggle control path
 toggleFileLocation2="/sys/class/leds/led:switch_1/brightness"  # Optional toggle control path
 toggleFileLocation3="/sys/class/leds/led:switch_2/brightness"  # Optional toggle control path
+
 
 # Turn LEDs off before turning them on to ensure they are off initially
 if [[ "$toggleAction" == "on" ]]; then
   # Turn off LEDs first before turning them on
   echo "0" > $whiteLedFileLocation
   echo "0" > $yellowLedFileLocation
+  echo "0" > $white2LedFileLocation
+  echo "0" > $yellow2LedFileLocation
   echo "0" > $toggleFileLocation
   echo "0" > $toggleFileLocation2
   echo "0" > $toggleFileLocation3
@@ -43,13 +48,16 @@ if [[ "$toggleAction" == "on" ]]; then
   # Turn on the LEDs based on the provided type
   if [[ "$ledType" == "both" || "$ledType" == "white" ]]; then
     echo $torchVal > $whiteLedFileLocation
+    echo $torchVal > $white2LedFileLocation
   fi
   if [[ "$ledType" == "both" || "$ledType" == "yellow" ]]; then
     echo $torchVal > $yellowLedFileLocation
+    echo $torchVal > $yellow2LedFileLocation
   fi
 
   # Set the toggle control to max brightness (turn on LEDs)
   echo $brightnessMax > $toggleFileLocation
+  echo $brightnessMax > $toggleFileLocation2
   echo $brightnessMax > $toggleFileLocation2
 
   echo "LEDs have been turned on with brightness $torchVal."
@@ -58,6 +66,8 @@ elif [[ "$toggleAction" == "off" ]]; then
   # Turn off LEDs (no brightness value needed)
   echo "0" > $whiteLedFileLocation
   echo "0" > $yellowLedFileLocation
+  echo "0" > $white2LedFileLocation
+  echo "0" > $yellow2LedFileLocation
   echo "0" > $toggleFileLocation
   echo "0" > $toggleFileLocation2
   echo "0" > $toggleFileLocation3
